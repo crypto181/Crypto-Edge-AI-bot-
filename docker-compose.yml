@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  cryptoedge-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cryptoedge-trading-engine
+    restart: unless-stopped
+    ports:
+      # Maps local port 3000 to port 3000 in container. 
+      # In production, route public traffic via a secure Nginx reverse proxy on 80/443.
+      - "3000:3000"
+    volumes:
+      # Read-only mounts for Firebase configuration JSONs
+      - ./firebase-applet-config.json:/app/firebase-applet-config.json:ro
+      - ./service-account.json:/app/service-account.json:ro
+      # Optional: Uncomment if utilizing fallback JSON-database storage to persist state between restarts
+      # - ./local-db.json:/app/local-db.json:rw
+    environment:
+      # Required secrets and environment configurations
+      - NODE_ENV=production
+      - PORT=3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - APP_URL=${APP_URL}
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
+      - FIRESTORE_DATABASE_ID=${FIRESTORE_DATABASE_ID}
+      # Instructs Firebase Admin SDK to seek credentials from the mounted service account
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account.json
+    healthcheck:
+      # Native curl-free Alpine container health check against the verified core health API
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "5"

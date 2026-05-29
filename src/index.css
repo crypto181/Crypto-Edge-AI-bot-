@@ -1,0 +1,272 @@
+@import "tailwindcss";
+
+/* === GLOBAL ANTI-ALIASING & TEXT RENDERING FOR SHARP AND ATTRACTIVE TYPOGRAPHY === */
+html, body {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11" !important;
+}
+
+/* === DARK MODE READABILITY & COLOR-CODING OPTIMIZATIONS (DEFAULT STANDARD THEME) === */
+
+:not(.light, .light *) .text-zinc-600 {
+  color: #a1a1aa !important; /* Shift to rich zinc-400 for high-contrast visibility */
+}
+:not(.light, .light *) .text-zinc-500 {
+  color: #cbd5e1 !important; /* Shift to beautiful slate-300 for readable labels */
+}
+:not(.light, .light *) .text-zinc-400 {
+  color: #f1f5f9 !important; /* Shift to bright slate-100 for crisp descriptions */
+}
+:not(.light, .light *) .text-zinc-300 {
+  color: #ffffff !important; /* Full white for high contrast secondary headlines */
+}
+:not(.light, .light *) .text-zinc-700 {
+  color: #e2e8f0 !important; /* Enhanced highlight */
+}
+
+/* Ensure placeholder visibility in dark inputs */
+:not(.light) input::placeholder, 
+:not(.light) select::placeholder, 
+:not(.light) textarea::placeholder {
+  color: #71717a !important; /* Clear, well-contrasted placeholder state */
+}
+
+/* Custom scrollbars for a premium obsidian look and clear tactile tracks */
+:not(.light) ::-webkit-scrollbar-track {
+  background: #09090b !important;
+}
+:not(.light) ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 9999px !important;
+  border: 2px solid #09090b !important;
+}
+:not(.light) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* === LIGHT MODE GLOBAL OVERRIDES === */
+
+.light {
+  /* Slate-based canvas and typography reset */
+  background-color: #f8fafc !important; /* slate-50 */
+  color: #1e293b !important; /* slate-800 */
+}
+
+/* Sidebar and Left Drawers */
+.light aside {
+  background-color: #ffffff !important;
+  border-right-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Core Panel and Card Surfaces with subtle elegant shadows */
+.light .bg-zinc-900\/50,
+.light .bg-zinc-900,
+.light .bg-zinc-950,
+.light .bg-zinc-950\/40,
+.light .bg-zinc-950\/90,
+.light .bg-zinc-950\/95,
+.light .bg-zinc-950\/60,
+.light .bg-zinc-900\/60,
+.light .bg-zinc-900\/95,
+.light .bg-zinc-900\/90,
+.light .bg-zinc-900\/70,
+.light .bg-zinc-900\/75,
+.light .bg-black\/40,
+.light .bg-zinc-900\/40,
+.light .bg-zinc-900\/80,
+.light .bg-zinc-900\/20,
+.light .bg-black {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04);
+}
+
+/* Heading standard elements and high-contrast texts */
+.light h1, 
+.light h2, 
+.light h3, 
+.light h4, 
+.light h5, 
+.light h6, 
+.light .text-white {
+  color: #0f172a !important; /* slate-900 */
+}
+
+/* Inner Text descriptions & subheadings */
+.light .text-zinc-400, 
+.light .text-zinc-500 {
+  color: #475569 !important; /* slate-600 */
+}
+.light .text-zinc-650,
+.light .text-zinc-600 {
+  color: #64748b !important; /* slate-500 */
+}
+.light .text-zinc-700 {
+  color: #334155 !important; /* slate-700 */
+}
+.light .text-zinc-850,
+.light .text-zinc-800,
+.light .text-zinc-900,
+.light .text-zinc-950,
+.light .text-zinc-300 {
+  color: #1e293b !important; /* slate-800 (high contrast dark text) */
+}
+.light .text-zinc-100,
+.light .text-zinc-200,
+.light .text-zinc-50 {
+  color: #0f172a !important; /* slate-900 (dark readable gray, not white!) */
+}
+
+/* Borders, lines, dividers, and gaps */
+.light .border-white\/5,
+.light .border-white\/10,
+.light .border-zinc-800,
+.light .border-zinc-900,
+.light .border-white\/20,
+.light .divide-white\/5,
+.light .divide-zinc-800,
+.light .border-white\/15,
+.light .border-black\/5 {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Input Fields and selector dropdowns */
+.light input, 
+.light select, 
+.light textarea {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: #0f172a !important;
+}
+.light input::placeholder, 
+.light select::placeholder, 
+.light textarea::placeholder {
+  color: #94a3b8 !important; /* slate-400 */
+}
+
+/* Buttons and primary elements (Turn interactive whites to Indigo, keep structural whites white) */
+.light button.bg-white,
+.light a.bg-white,
+.light [role="button"].bg-white,
+.light input[type="submit"].bg-white,
+.light .bg-white.text-black,
+.light .bg-white.text-zinc-950 {
+  background-color: #4f46e5 !important; /* Elegant brand Indigo */
+  color: #ffffff !important;
+}
+.light button.bg-white:hover,
+.light a.bg-white:hover,
+.light .bg-white.text-black:hover,
+.light .bg-white.text-zinc-950:hover {
+  background-color: #4338ca !important; /* Indigo shade-700 hover */
+}
+.light button.bg-white .text-black,
+.light button.bg-white .text-zinc-950,
+.light .bg-white.text-black .text-black,
+.light .bg-white.text-black .text-zinc-950 {
+  color: #ffffff !important;
+}
+
+/* Background Opacity Overrides */
+.light .bg-white\/5,
+.light .bg-white\/10,
+.light .bg-white\/15,
+.light .bg-white\/20,
+.light .bg-white\/[0.08],
+.light .bg-white\/[0.05],
+.light .bg-white\/[0.02],
+.light .bg-white\/[0.01],
+.light .bg-white\/0.05 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+.light .bg-zinc-850,
+.light .bg-zinc-800 {
+  background-color: #e2e8f0 !important; /* slate-200 */
+}
+.light .bg-zinc-900\/10,
+.light .bg-zinc-900\/15,
+.light .bg-zinc-900\/5 {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Hover utilities */
+.light .hover\:bg-white\/5:hover,
+.light .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+.light .hover\:text-white:hover {
+  color: #4f46e5 !important; /* Link text hovers as elegant indigo */
+}
+
+/* Alert dialogs or warning indicators */
+.light .bg-yellow-500\/10 {
+  background-color: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+/* Successful indicators, ticks, badges & labels */
+.light .text-emerald-400 {
+  color: #047857 !important; /* emerald-700 */
+}
+.light .bg-emerald-500\/10, 
+.light .bg-emerald-500\/5 {
+  background-color: #ecfdf5 !important; /* emerald-50 */
+  color: #065f46 !important; /* emerald-800 */
+  border-color: rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Failure/Danger colors and warning indicators */
+.light .text-rose-400 {
+  color: #b91c1c !important; /* rose-700 */
+}
+.light .bg-rose-500\/10 {
+  background-color: #fef2f2 !important; /* rose-50 */
+  color: #991b1b !important; /* rose-800 */
+  border-color: rgba(239, 68, 68, 0.15) !important;
+}
+
+/* App logs, parameters & monospace styling */
+.light pre, 
+.light code, 
+.light .font-mono {
+  color: #334155 !important; /* slate-700 */
+}
+.light .bg-black {
+  background-color: #f1f5f9 !important; /* slate-100 */
+}
+.light .bg-zinc-950\/40 {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Active navigation indicators (SidebarItem and Mobile menu) */
+.light .bg-white.text-black {
+  background-color: #4f46e5 !important;
+  color: #ffffff !important;
+}
+.light .bg-white.text-black svg {
+  color: #ffffff !important;
+}
+
+/* Mobile footer menu background */
+.light footer {
+  background-color: #ffffff !important;
+  border-top-color: rgba(0, 0, 0, 0.08) !important;
+}
+.light footer button {
+  color: #475569 !important;
+}
+.light footer button.text-white {
+  color: #4f46e5 !important;
+}
+
+/* Backdrop structures and modal dialogue views */
+.light .bg-black\/60,
+.light .bg-black\/80 {
+  background-color: rgba(15, 23, 42, 0.2) !important; /* light slate backdrop */
+}
+.light .shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.08) !important;
+}

@@ -1,0 +1,117 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    function incoming() {
+      return request.resource.data;
+    }
+    function existing() {
+      return resource.data;
+    }
+    function isEmailVerified() {
+      return isSignedIn() && (
+        request.auth.token.email_verified == true || 
+        request.auth.token.firebase.sign_in_provider == 'anonymous'
+      );
+    }
+    // Admin check - would normally check an admins collection, but for this setup we'll use a hardcoded email if needed
+    // function isAdmin() { return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)); }
+
+    // --- User Profiles ---
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isEmailVerified() && isValidUser(incoming()) && (
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'exchanges', 'settings', 'fullName', 'referralCode', 'referralCount', 'referralEarnings', 'sandboxBalances', 'createdAt', 'email', 'uid', 'referredBy', 'withdrawPassword'
+        ])
+      );
+
+      function isValidUser(data) {
+        return (!('uid' in data) || data.uid == request.auth.uid)
+          && (!('email' in data) || (data.email is string && data.email.size() <= 256))
+          && (!('fullName' in data) || (data.fullName is string && data.fullName.size() <= 128))
+          && (!('exchanges' in data) || data.exchanges is map)
+          && (!('settings' in data) || data.settings is map)
+          && (!('referralCode' in data) || (data.referralCode is string && data.referralCode.size() <= 128))
+          && (!('referralCount' in data) || data.referralCount is number)
+          && (!('referralEarnings' in data) || data.referralEarnings is number)
+          && (!('sandboxBalances' in data) || data.sandboxBalances is map)
+          && (!('referredBy' in data) || (data.referredBy is string && data.referredBy.size() <= 128))
+          && (!('withdrawPassword' in data) || (data.withdrawPassword is string && data.withdrawPassword.size() <= 128));
+      }
+
+      // --- Trades ---
+      match /trades/{tradeId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isEmailVerified() && isValidTrade(incoming());
+        allow update: if isOwner(userId) && isEmailVerified() && isValidTrade(incoming()) && (
+          existing().status == 'open' &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'exitPrice', 'pnl'])
+        );
+        allow delete: if isOwner(userId) && isEmailVerified() && existing().status == 'cancelled';
+
+        function isValidTrade(data) {
+          return data.userId == userId
+            && data.exchange is string && data.exchange.size() <= 32
+            && data.symbol is string && data.symbol.size() <= 16
+            && data.side in ['buy', 'sell']
+            && data.amount is number && data.amount > 0
+            && data.price is number && data.price > 0
+            && data.status in ['open', 'closed', 'cancelled']
+            && (data.status != 'closed' || data.exitPrice is number)
+            && (!('stopLoss' in data) || data.stopLoss is number)
+            && (!('takeProfit' in data) || data.takeProfit is number)
+            && data.timestamp is timestamp;
+        }
+      }
+
+      // --- Bots ---
+      match /bots/{botId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isEmailVerified() && isValidBot(incoming());
+        allow update: if isOwner(userId) && isEmailVerified() && isValidBot(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['isActive', 'settings', 'allocation'])
+        );
+        allow delete: if isOwner(userId) && isEmailVerified();
+
+        function isValidBot(data) {
+          return data.userId == userId
+            && data.name is string && data.name.size() <= 64
+            && data.strategy is string && data.strategy.size() <= 32
+            && data.isActive is bool
+            && data.createdAt is timestamp;
+        }
+      }
+
+      // --- Transactions ---
+      match /transactions/{transactionId} {
+        allow list, get: if isOwner(userId);
+        allow create: if isOwner(userId) && isEmailVerified();
+        allow update, delete: if false;
+      }
+    }
+
+    // --- Signals ---
+    match /signals/{signalId} {
+      allow list, get: if isSignedIn();
+      // Signals are only created/updated by the server (admin)
+      // In this environment, we simulate admin by checking a specific service account UID or similar
+      // For now, only read access is granted to users.
+    }
+  }
+}

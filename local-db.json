@@ -1,0 +1,16 @@
+{
+  "users": {
+    "test": {
+      "exchanges": {
+        "binance": {
+          "apiKey": "test",
+          "secret": "test",
+          "tradingType": "spot",
+          "status": "verified",
+          "syncedAt": "2026-05-28T13:13:02.164Z"
+        }
+      }
+    }
+  },
+  "signals": []
+}

@@ -1,0 +1,6 @@
+{
+  "name": "CryptoEdge AI Bot",
+  "description": "High-performance AI trading bot featuring real-time market analysis, automated strategies across major exchanges (Binance, OKX), and a professional technical dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
